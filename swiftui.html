@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Caller</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* 当選番号表示 */
+        .display-section {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #8e8e93;
+            margin-bottom: 4px;
+        }
+
+        .current-number {
+            font-size: 72px;
+            font-weight: 800;
+            color: #007aff;
+            height: 90px;
+            line-height: 90px;
+            font-family: system-ui, sans-serif;
+        }
+
+        /* ボタン関係 */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-main {
+            flex: 1;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            padding: 14px 0;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .btn-main:disabled {
+            background-color: #8e8e93;
+            cursor: not-allowed;
+        }
+
+        .btn-reset {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+            border: none;
+            padding: 14px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        hr {
+            width: 100%;
+            border: none;
+            border-top: 1px solid #e5e5ea;
+            margin: 0;
+        }
+
+        /* ボード表示 (B I N G O) */
+        .board {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .headers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            text-align: center;
+        }
+
+        .header-cell {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff9500;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            background-color: rgba(142, 142, 147, 0.15);
+            color: #000000;
+            box-sizing: border-border-box;
+        }
+
+        /* 出目状態のスタイル */
+        .cell.drawn {
+            background-color: rgba(0, 122, 255, 0.8);
+            color: #ffffff;
+        }
+
+        .cell.current {
+            background-color: #ff9500;
+            color: #ffffff;
+            border: 2px solid #ff3b30;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- メイン表示：現在の数字 -->
+    <div class="display-section">
+        <div class="label">当選番号</div>
+        <div id="currentNumber" class="current-number">--</div>
+    </div>
+
+    <!-- 操作ボタン -->
+    <div class="button-group">
+        <button id="drawBtn" class="btn-main" onclick="drawNextNumber()">数字を引く</button>
+        <button class="btn-reset" onclick="resetGame()">↻</button>
+    </div>
+
+    <hr>
+
+    <!-- 1〜75の出目一覧ボード (B I N G O) -->
+    <div class="board">
+        <div class="headers">
+            <div class="header-cell">B</div>
+            <div class="header-cell">I</div>
+            <div class="header-cell">N</div>
+            <div class="header-cell">G</div>
+            <div class="header-cell">O</div>
+        </div>
+        <div id="grid" class="grid"></div>
+    </div>
+</div>
+
+<script>
+    let remainingNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
+    let drawnNumbers = new Set();
+    let currentNumber = null;
+
+    function renderBoard() {
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+
+        // 15行 × 5列（縦に番号が並ぶ計算）
+        for (let row = 0; row < 15; row++) {
+            for (let col = 0; col < 5; col++) {
+                const number = col * 15 + row + 1;
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.textContent = number;
+
+                if (number === currentNumber) {
+                    cell.classList.add('current');
+                } else if (drawnNumbers.has(number)) {
+                    cell.classList.add('drawn');
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+
+        // 当選番号表示の更新
+        const currentDisplay = document.getElementById('currentNumber');
+        currentDisplay.textContent = currentNumber !== null ? currentNumber : '--';
+
+        // ボタンテキスト・有効無効の制御
+        const drawBtn = document.getElementById('drawBtn');
+        if (remainingNumbers.length === 0) {
+            drawBtn.textContent = '全数字終了';
+            drawBtn.disabled = true;
+        } else {
+            drawBtn.textContent = '数字を引く';
+            drawBtn.disabled = false;
+        }
+    }
+
+    function drawNextNumber() {
+        if (remainingNumbers.length === 0) return;
+
+        const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
+        const picked = remainingNumbers.splice(randomIndex, 1)[0];
+
+        currentNumber = picked;
+        drawnNumbers.add(picked);
+
+        renderBoard();
+    }
+
+    function resetGame() {
+        remainingNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
+        drawnNumbers.clear();
+        currentNumber = null;
+        renderBoard();
+    }
+
+    // 初期描画
+    renderBoard();
+</script>
+
+</body>
+</html>
