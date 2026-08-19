@@ -92,7 +92,8 @@
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		1C1C1C1C1C1C1C1C1C1C1C1C /* Project object */ = {
+-		1C1C1C1C1C1C1C1C1C1C1C1C /* Project object */ = {
++		1P1P1P1P1P1P1P1P1P1P1P1P /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
@@ -273,7 +274,7 @@
 				INFOPLIST_FILE = bingoloid/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifestLauncher = "$(EXECUTABLE_NAME)";
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -301,7 +302,7 @@
 				INFOPLIST_FILE = bingoloid/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifestLauncher = "$(EXECUTABLE_NAME)";
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -340,5 +341,6 @@
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 1C1C1C1C1C1C1C1C1C1C1C1C /* Project object */;
+-	rootObject = 1C1C1C1C1C1C1C1C1C1C1C1C /* Project object */;
++	rootObject = 1P1P1P1P1P1P1P1P1P1P1P1P /* Project object */;
 }
