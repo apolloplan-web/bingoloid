@@ -1,0 +1,14 @@
+Platform: iOS, iPadOS
+Langages: swift
+Workflow:
+    1:APP will boot up GAME MODE
+    2:GAME MODE means that generate and record the bingo numbers
+    3:On GAME MODE, the APP shows the latest number prominently at the screen
+    4:Otherwise, with previously published numbers listed below in descending order.
+    5:In progress of bing, User can switch CHECK MODE as their demand.
+    6:On CHECK MODE, User should prepare paper bingo sheets which is puched with hitted numbers
+    6:Users take those photos with iOS devives to tap <写真でチェック> button on screen.
+    7:When several photos are feeded to APP, The numbers detected from the photo are cross-checked with the previously announced numbers.
+    8:The result is displayed on the screen as either 'MATCHED' or 'UNMATCHED'
+    9:When the result is appeared, User can choice which continue to CHECK MODE or return to GAME MODE
+Screen size:iPad Air 13 inch Landscape and Portrait
