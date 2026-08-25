@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingoloid</title>
+<style>
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.container{
+    display:flex;
+    width:100vw;
+    height:100vh;
+}
+.left-pane{
+    width:40%;
+    display:flex;
+    flex-direction:column;
+    background:#f5f5f5;
+}
+.right-pane{
+    flex:1;
+    overflow:auto;
+    padding:20px;
+    background:#fff;
+}
+#divider{
+    width:8px;
+    background:#d0d0d0;
+    cursor:col-resize;
+}
+.big-number{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    color:#007aff;
+    font-size:clamp(120px,25vw,500px);
+}
+.button-area{
+    display:flex;
+    gap:10px;
+    padding:20px;
+}
+.button-area button{
+    flex:1;
+    font-size:24px;
+    padding:20px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+}
+#drawBtn{
+    background:#007aff;
+    color:white;
+}
+.resetBtn{
+    background:#ffebe9;
+    color:#ff3b30;
+}
+#drawnNumbers{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-content:flex-start;
+}
+.drawn-item{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-width:70px;
+    height:70px;
+    padding:0 10px;
+    border-radius:10px;
+    background:#007aff;
+    color:#fff;
+    font-weight:bold;
+    font-size:clamp(18px,2vw,36px);
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div id="leftPane" class="left-pane">
+        <div id="currentNumber" class="big-number">--</div>
+        <div class="button-area">
+            <button id="drawBtn" onclick="drawNextNumber()">数字を引く</button>
+            <button class="resetBtn" onclick="resetGame()">リセット</button>
+        </div>
+    </div>
+    <div id="divider"></div>
+    <div class="right-pane">
+        <div id="drawnNumbers"></div>
+    </div>
+</div>
+<script>
+let remainingNumbers = Array.from({length:75},(_,i)=>i+1);
+let drawnNumbers = new Set();
+let currentNumber = null;
+function renderBoard(){
+    document.getElementById('currentNumber').textContent = currentNumber ?? '--';
+    const list = document.getElementById('drawnNumbers');
+    list.innerHTML='';
+    [...drawnNumbers].sort((a,b)=>a-b).forEach(number=>{
+        const item=document.createElement('div');
+        item.className='drawn-item';
+        item.textContent=number;
+        list.appendChild(item);
+    });
+    const btn=document.getElementById('drawBtn');
+    if(remainingNumbers.length===0){
+        btn.disabled=true;
+        btn.textContent='全数字終了';
+    }else{
+        btn.disabled=false;
+        btn.textContent='数字を引く';
+    }
+}
+function drawNextNumber(){
+    if(!remainingNumbers.length) return;
+    const idx=Math.floor(Math.random()*remainingNumbers.length);
+    const picked=remainingNumbers.splice(idx,1)[0];
+    currentNumber=picked;
+    drawnNumbers.add(picked);
+    renderBoard();
+}
+
+function resetGame(){
+    const answer = prompt(
+        'リセットする場合は「リセット」と入力してください。'
+    );
+    if(answer !== 'リセット'){
+        alert('リセットを中止しました。');
+        return;
+    }
+    remainingNumbers = Array.from(
+        {length:75},
+        (_,i)=>i+1
+    );
+
+    drawnNumbers.clear();
+    currentNumber = null;
+    renderBoard();
+    alert('リセットしました。');
+}
+
+const divider=document.getElementById('divider');
+const leftPane=document.getElementById('leftPane');
+let dragging=false;
+divider.addEventListener('mousedown',()=>dragging=true);
+document.addEventListener('mouseup',()=>dragging=false);
+document.addEventListener('mousemove',(e)=>{
+    if(!dragging) return;
+    const percent=(e.clientX/window.innerWidth)*100;
+    if(percent>15 && percent<85){
+        leftPane.style.width=percent+'%';
+    }
+});
+renderBoard();
+</script>
+</body>
+</html>
